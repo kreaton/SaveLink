@@ -14,6 +14,7 @@ public sealed class MainForm : Form
     private const int ContentWidth = 448;
     private const int ShortcutTab = 0;
     private const int HelpTab = 1;
+    private const int PreviewIconSize = 48;
 
     private readonly FaviconService _favicons = new();
     private readonly System.Windows.Forms.Timer _debounce = new() { Interval = 600 };
@@ -25,7 +26,7 @@ public sealed class MainForm : Form
 
     private readonly TextBox _url = new() { PlaceholderText = "Paste a link, or drag one onto this window" };
     private readonly TextBox _name = new() { PlaceholderText = "Name shown under the shortcut" };
-    private readonly PictureBox _preview = new() { BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.Zoom };
+    private readonly PictureBox _preview = new() { BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.CenterImage };
     private readonly Label _iconStatus = new() { ForeColor = SystemColors.GrayText, Text = "Paste or drop a link to begin" };
     private readonly LinkLabel _pickIcon = new() { Text = "Choose file…", AutoSize = true };
     private readonly LinkLabel _generatedIcon = new() { Text = "Generate", AutoSize = true };
@@ -457,9 +458,13 @@ public sealed class MainForm : Form
     private void SetIcon(Bitmap? icon)
     {
         var old = _icon;
+        var oldPreview = _preview.Image;
         _icon = icon;
-        _preview.Image = icon;
+        // Shown at desktop icon size (48 px at 100%), scaled the same way as the .ico frames, rather than
+        // stretched by the PictureBox - so the preview looks like the shortcut will.
+        _preview.Image = icon == null ? null : IconTools.Render(icon, Dp(PreviewIconSize));
         old?.Dispose();
+        oldPreview?.Dispose();
     }
 
     /// <summary>Shows the icon the website lookup produced and keeps a copy of it for Reset. Null forgets it.</summary>

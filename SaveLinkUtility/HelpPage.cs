@@ -6,8 +6,8 @@ using System.Windows.Forms;
 namespace SaveLinkUtility;
 
 /// <summary>
-/// The Help tab: formatted text (headings, numbered steps, bullets, key chips) rendered as RTF in a
-/// borderless, read-only rich text box. In the text, **bold** and `code` are the only markup.
+/// The Help tab: Help.md (embedded in the exe) converted to RTF and shown in a borderless, read-only
+/// rich text box. Only a small Markdown subset is understood - see <see cref="MarkdownToRtf"/>.
 /// </summary>
 public sealed class HelpPage : Panel
 {
@@ -49,46 +49,54 @@ public sealed class HelpPage : Panel
 
     private static string BuildRtf()
     {
+        using var stream = typeof(HelpPage).Assembly.GetManifestResourceStream("SaveLinkUtility.Help.md");
+        var markdown = stream == null ? "# Help\n\nThe help text is missing from this build." : new StreamReader(stream).ReadToEnd();
+
         var r = new RtfWriter();
-
-        r.Title("SaveLinkUtility");
-        r.Lead("Turns a web address into a desktop shortcut that carries the site's own icon.");
-
-        r.Heading("Getting started");
-        r.Step(1, "Paste a link into **Website URL**, or drag a link, selected text or a `.url` file onto the window. "
-                + "If the clipboard holds a link when the program starts, it is filled in for you.");
-        r.Step(2, "The page title and icon are looked up automatically. Change the name if you like.");
-        r.Step(3, "Click **Create Shortcut**, or press `Enter`.");
-
-        r.Heading("Icon");
-        r.Text("The icon is taken from the website: its apple-touch-icon, a declared icon, or `favicon.ico`. "
-             + "The links under the preview change it:");
-        r.Bullet("**Choose file…** uses your own image (png, jpg, gif, bmp or ico). SVG is not supported.");
-        r.Bullet("**Generate** makes a simple letter tile from the site name.");
-        r.Bullet("**Reset** goes back to the icon from the website.");
-        r.Bullet("**Save as .ico…** saves the current icon as a multi-size `.ico` file wherever you choose.");
-
-        r.Heading("Opening the shortcut");
-        r.Bullet("**Default browser** creates a `.url` file. It opens in whichever browser is your default at the time you click it.");
-        r.Bullet("**A specific browser** creates a `.lnk` that always opens in that browser, even if you change the default later.");
-        r.Bullet("**Open in its own app window** starts the site without tabs or address bar, with its own taskbar button. "
-               + "This only works with Chromium-based browsers: Edge, Chrome, Brave and Vivaldi. Firefox has no such mode.");
-
-        r.Heading("Saving");
-        r.Bullet("**Save location** is the Desktop by default. Use **Browse…** to pick another folder.");
-        r.Bullet("**Save icon locally** stores the icon in `%LOCALAPPDATA%\\SaveLinkUtility\\Icons`. "
-               + "The shortcut points at that file, so keep the folder.");
-        r.Bullet("**Create shortcut** can be unticked to only save the icon.");
-        r.Text("After creating, **Show in folder** reveals the new file in Explorer.");
-
-        r.Heading("Keyboard and command line");
-        r.Bullet("`F1` opens this page, `Esc` goes back, `Ctrl+Tab` switches tabs.");
-        r.Bullet("`SaveLinkUtility.exe https://example.com` starts with that address filled in.");
-
-        var version = Application.ProductVersion.Split('+')[0];
-        r.Footer($"Version {version}");
-
+        MarkdownToRtf(markdown, r);
+        r.Footer($"Version {Application.ProductVersion.Split('+')[0]}");
         return r.ToString();
+    }
+
+    /// <summary>
+    /// Converts the Markdown subset Help.md uses: "# title" (the paragraph after it is the lead),
+    /// "## heading", "1. step", "- bullet", plain paragraphs, and **bold** / `code` inline.
+    /// Lines that follow on without a blank line are joined, so long items can be wrapped in the file.
+    /// </summary>
+    private static void MarkdownToRtf(string markdown, RtfWriter r)
+    {
+        // Each block: what kind it is, its number (for steps), and its text so far.
+        var blocks = new List<(char Kind, int Number, string Text)>();
+        foreach (var raw in markdown.Replace("\r\n", "\n").Split('\n'))
+        {
+            var line = raw.Trim();
+            if (line.Length == 0) { blocks.Add(('\0', 0, "")); continue; }
+
+            var dot = line.IndexOf(". ", StringComparison.Ordinal);
+            if (line.StartsWith("## ")) blocks.Add(('h', 0, line[3..]));
+            else if (line.StartsWith("# ")) blocks.Add(('t', 0, line[2..]));
+            else if (line.StartsWith("- ") || line.StartsWith("* ")) blocks.Add(('b', 0, line[2..]));
+            else if (dot > 0 && int.TryParse(line[..dot], out var n)) blocks.Add(('n', n, line[(dot + 2)..]));
+            else if (blocks.Count > 0 && blocks[^1].Kind is 'p' or 'b' or 'n')
+                blocks[^1] = blocks[^1] with { Text = blocks[^1].Text + " " + line };
+            else blocks.Add(('p', 0, line));
+        }
+
+        char previous = '\0';
+        foreach (var (kind, number, text) in blocks)
+        {
+            switch (kind)
+            {
+                case 't': r.Title(text); break;
+                case 'h': r.Heading(text); break;
+                case 'b': r.Bullet(text); break;
+                case 'n': r.Step(number, text); break;
+                case 'p' when previous == 't': r.Lead(text); break;
+                case 'p': r.Text(text); break;
+                default: continue; // blank line: keeps 'previous' pointing at the last real block
+            }
+            previous = kind;
+        }
     }
 
     // ------------------------------------------------------------------ RTF

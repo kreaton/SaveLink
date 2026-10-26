@@ -11,4 +11,8 @@
     <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Help.md" LogicalName="SaveLinkUtility.Help.md" />
+  </ItemGroup>
+
 </Project>

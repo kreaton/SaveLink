@@ -192,7 +192,20 @@ public static class IconTools
 
     private static byte[] RenderPng(Bitmap source, int size)
     {
-        using var bmp = new Bitmap(size, size, PixelFormat.Format32bppArgb);
+        using var bmp = Render(source, size);
+        using var ms = new MemoryStream();
+        bmp.Save(ms, ImageFormat.Png);
+        return ms.ToArray();
+    }
+
+    /// <summary>
+    /// The image scaled to fit a size x size square, exactly as each .ico frame is made - so a preview
+    /// drawn with this looks like the icon Windows will show.
+    /// </summary>
+    public static Bitmap Render(Bitmap source, int size)
+    {
+        var bmp = new Bitmap(size, size, PixelFormat.Format32bppArgb);
+        bmp.SetResolution(96, 96);
         using (var g = Graphics.FromImage(bmp))
         {
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -210,9 +223,6 @@ public static class IconTools
             attrs.SetWrapMode(WrapMode.TileFlipXY);
             g.DrawImage(source, dest, 0, 0, source.Width, source.Height, GraphicsUnit.Pixel, attrs);
         }
-
-        using var ms = new MemoryStream();
-        bmp.Save(ms, ImageFormat.Png);
-        return ms.ToArray();
+        return bmp;
     }
 }
