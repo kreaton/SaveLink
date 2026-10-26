@@ -20,6 +20,15 @@ $root = Split-Path $PSScriptRoot -Parent
 $project = Join-Path $root 'SaveLink\SaveLink.csproj'
 $out = Join-Path $root 'artifacts\msix'
 
+# Windows only installs an unsigned package with Developer Mode on (otherwise: HRESULT 0x80073CFF).
+# Check before spending minutes on the build.
+if ($Install) {
+    $unlock = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock' -ErrorAction SilentlyContinue
+    if ($unlock.AllowDevelopmentWithoutDevLicense -ne 1) {
+        throw 'Developer Mode is off, so Windows refuses to install an unsigned package. Turn it on under Settings > System > For developers > Developer Mode, then run this again.'
+    }
+}
+
 $version = (dotnet msbuild $project -getProperty:Version "-p:BuildNumber=$BuildNumber").Trim()
 if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "Unexpected version '$version' - check MajorMinor in Directory.Build.props." }
 $packageVersion = "$version.0"
