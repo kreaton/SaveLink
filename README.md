@@ -145,7 +145,7 @@ The Store takes the app as an **MSIX package**, the modern Windows installer for
    - **Properties:** category *Utilities & tools*, and the **privacy policy URL**. [`PRIVACY.md`](PRIVACY.md) in this repo can serve as the policy: link to it on GitLab. It is required because the app uses the internet.
    - **Age ratings:** a short questionnaire. SaveLink has no user content or chat.
    - **Packages:** upload the `.msixbundle`.
-   - **Store listings:** description, at least one screenshot, and search terms. Desktop screenshots must be at least 1366×768 pixels, so place the window on a plain background of that size rather than uploading the window alone.
+   - **Store listings:** description, at least one screenshot, and search terms. The text is ready in [`Packaging/StoreListing.md`](Packaging/StoreListing.md), and `Packaging/Make-StoreArt.ps1` makes the box art, poster art and tile icon in `Packaging/StoreArt`. Desktop screenshots must be at least 1366×768 pixels, so place the window on a plain background of that size rather than uploading the window alone.
    - **Submission options:** the package uses the restricted capability `runFullTrust`, which every classic desktop app needs. Partner Center asks why; answer along the lines of *"Desktop WinForms app that creates shortcut files in folders the user chooses."*
 6. **Wait for certification:** usually from a few hours to a few business days. After that, the app is live, and updates go through the same steps with a higher version.
 
