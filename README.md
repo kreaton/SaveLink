@@ -117,8 +117,11 @@ The Store takes the app as an **MSIX package**, the modern Windows installer for
 
 ### One-time setup
 
-1. **Developer account:** sign up at [Partner Center](https://partner.microsoft.com/dashboard/registration). An individual account is enough. Expect an identity check that can take a few days.
-2. **Reserve the name:** in Partner Center, choose **Apps and games → New product → MSIX or PWA app** and reserve **SaveLink**. If the name is taken, reserve another and change `DisplayName` in `Packaging/Package.appxmanifest` to match.
+1. **Developer account:** start at **[storedeveloper.microsoft.com](https://storedeveloper.microsoft.com)** and choose **Get started for free → Individual developer**. Microsoft says this is the only entry point for the current, free sign-up; starting from Partner Center, Visual Studio or Xbox leads to an older process. ([Microsoft's guide](https://learn.microsoft.com/windows/apps/publish/partner-center/open-a-developer-account))
+   - **Account type:** an individual account suits a hobby or personal project published under your own name. It must use a personal Microsoft account, and it can't be changed to a company account later.
+   - **Identity check:** you photograph a government ID and take a selfie with your phone.
+   - **When it's done:** choose **Go to Partner Center dashboard**, sign in with the same Microsoft account, and you land on **Apps & Games**. If the tile doesn't show yet, wait a few minutes, or go straight to [aka.ms/submitwindowsapp](https://aka.ms/submitwindowsapp).
+2. **Reserve the name:** in Partner Center's **Apps & Games**, choose **New product → MSIX or PWA app** and reserve **SaveLink**. If the name is taken, reserve another and change `DisplayName` in `Packaging/Package.appxmanifest` to match.
 3. **Copy the package identity:** under the app's **Product management → Product identity**, copy these three values into `Packaging/Package.appxmanifest`, in the places marked `STORE`:
    - `Package/Identity/Name`
    - `Package/Identity/Publisher` (looks like `CN=XXXXXXXX-XXXX-…`)
