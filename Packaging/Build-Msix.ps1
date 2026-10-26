@@ -85,5 +85,5 @@ Write-Host "`nStore package: $bundle" -ForegroundColor Green
 if ($Install) {
     # Registers the unpacked x64 layout, which Windows allows unsigned when Developer Mode is on.
     Add-AppxPackage -Register (Join-Path $out 'layout-x64\AppxManifest.xml') -ForceApplicationShutdown
-    Write-Host 'Installed - SaveLink is in the Start menu. Remove it again with: Get-AppxPackage SaveLink | Remove-AppxPackage'
+    Write-Host 'Installed - SaveLink is in the Start menu. Remove it again with: Get-AppxPackage 19966Kreaton.dk.SaveLink | Remove-AppxPackage'
 }

@@ -122,9 +122,9 @@ The Store takes the app as an **MSIX package**, the modern Windows installer for
    - **Identity check:** you photograph a government ID and take a selfie with your phone.
    - **When it's done:** choose **Go to Partner Center dashboard**, sign in with the same Microsoft account, and you land on **Apps & Games**. If the tile doesn't show yet, wait a few minutes, or go straight to [aka.ms/submitwindowsapp](https://aka.ms/submitwindowsapp).
 2. **Reserve the name:** in Partner Center's **Apps & Games**, choose **New product → MSIX or PWA app** and reserve **SaveLink**. If the name is taken, reserve another and change `DisplayName` in `Packaging/Package.appxmanifest` to match.
-3. **Copy the package identity:** under the app's **Product management → Product identity**, copy these three values into `Packaging/Package.appxmanifest`, in the places marked `STORE`:
+3. **Copy the package identity** (done for SaveLink): under the app's **Product management → Product identity**, copy these three values into `Packaging/Package.appxmanifest`, in the places marked `STORE`. They must match exactly, or the upload is rejected.
    - `Package/Identity/Name`
-   - `Package/Identity/Publisher` (looks like `CN=XXXXXXXX-XXXX-…`)
+   - `Package/Identity/Publisher` (a `CN=` followed by a GUID)
    - `Package/Properties/PublisherDisplayName`
 
 ### Each release
@@ -135,7 +135,7 @@ The Store takes the app as an **MSIX package**, the modern Windows installer for
    .\Packaging\Build-Msix.ps1 -BuildNumber 57
    ```
    This publishes self-contained x64 and ARM64 builds, so users don't need .NET installed. The result is `artifacts\msix\SaveLink_1.0.57.0.msixbundle`. The script adds the `.0` the Store requires.
-3. **Try it locally (optional):** turn on Developer Mode (**Settings → System → For developers**), then run `.\Packaging\Build-Msix.ps1 -Install`. SaveLink appears in the Start menu like a Store app. Remove it with `Get-AppxPackage SaveLink | Remove-AppxPackage`.
+3. **Try it locally (optional):** turn on Developer Mode (**Settings → System → For developers**), then run `.\Packaging\Build-Msix.ps1 -Install`. SaveLink appears in the Start menu like a Store app. Remove it with `Get-AppxPackage 19966Kreaton.dk.SaveLink | Remove-AppxPackage`.
 4. **Run Microsoft's certification checks (optional, recommended):** the Windows App Certification Kit runs the same basic tests the Store does.
    ```
    & "${env:ProgramFiles(x86)}\Windows Kits\10\App Certification Kit\appcert.exe" test -appxpackagepath artifacts\msix\SaveLink_1.0.57.0.msixbundle -reportoutputpath artifacts\wack.xml

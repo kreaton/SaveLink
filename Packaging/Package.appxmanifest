@@ -2,11 +2,12 @@
 <!--
   MSIX package manifest for SaveLink. Build-Msix.ps1 fills in $Version$ and $Arch$.
 
-  Before uploading to the Microsoft Store, replace the three values marked STORE with the ones from
-  Partner Center (your app > Product management > Product identity):
+  The three values marked STORE come from Partner Center (Apps & Games > SaveLink > Product management >
+  Product identity) and must match it exactly, or the Store rejects the upload:
     Identity Name        = "Package/Identity/Name"
-    Identity Publisher   = "Package/Identity/Publisher"  (looks like CN=XXXXXXXX-XXXX-...)
+    Identity Publisher   = "Package/Identity/Publisher"
     PublisherDisplayName = "Package/Properties/PublisherDisplayName"
+  Store ID 9PFZ6G74TP67, package family name 19966Kreaton.dk.SaveLink_85cwxx8ydx5h4.
 -->
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -17,14 +18,14 @@
   IgnorableNamespaces="uap uap3 desktop rescap">
 
   <Identity
-    Name="SaveLink"
-    Publisher="CN=SaveLinkDev"
+    Name="19966Kreaton.dk.SaveLink"
+    Publisher="CN=2100361B-3D6D-4C60-BB1F-A84FCFFCF11B"
     Version="$Version$"
     ProcessorArchitecture="$Arch$" /><!-- STORE: Name and Publisher -->
 
   <Properties>
     <DisplayName>SaveLink</DisplayName>
-    <PublisherDisplayName>Per Hejndorf</PublisherDisplayName><!-- STORE -->
+    <PublisherDisplayName>Kreaton.dk</PublisherDisplayName><!-- STORE -->
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
