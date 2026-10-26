@@ -1,4 +1,4 @@
-namespace SaveLinkUtility.Services;
+namespace SaveLink.Services;
 
 public static class FileNames
 {

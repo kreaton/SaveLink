@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Security.Cryptography;
 
-namespace SaveLinkUtility.Services;
+namespace SaveLink.Services;
 
 /// <summary>Decoding downloaded images, generating a fallback icon, and writing multi-size .ico files.</summary>
 public static class IconTools

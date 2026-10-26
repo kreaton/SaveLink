@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 
-namespace SaveLinkUtility.Services;
+namespace SaveLink.Services;
 
 public sealed record PageInfo(string? Title, Bitmap? Icon, Uri? IconUrl);
 

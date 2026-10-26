@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace SaveLinkUtility;
+namespace SaveLink;
 
 /// <summary>A flat tab bar: text tabs with an accent underline under the selected one, and an optional key hint.</summary>
 public sealed class TabStrip : Control

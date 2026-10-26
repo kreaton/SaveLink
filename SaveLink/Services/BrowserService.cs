@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32;
 
-namespace SaveLinkUtility.Services;
+namespace SaveLink.Services;
 
 public sealed record BrowserInfo(string Name, string ExePath)
 {
@@ -14,6 +14,31 @@ public sealed record BrowserInfo(string Name, string ExePath)
     };
 
     public bool SupportsAppWindow => AppModeExes.Contains(Path.GetFileName(ExePath));
+}
+
+/// <summary>An entry in an "Open with" list. <see cref="Browser"/> is null for "Default browser".</summary>
+public sealed record BrowserChoice(BrowserInfo? Browser, string Text)
+{
+    public override string ToString() => Text;
+
+    /// <summary>"Default browser (X)" followed by every installed browser.</summary>
+    public static List<BrowserChoice> List(BrowserInfo? defaultBrowser, IEnumerable<BrowserInfo> installed)
+    {
+        var list = new List<BrowserChoice>
+        {
+            new(null, defaultBrowser is null ? "Default browser" : $"Default browser ({defaultBrowser.Name})"),
+        };
+        list.AddRange(installed.Select(b => new BrowserChoice(b, b.Name)));
+        return list;
+    }
+
+    /// <summary>The entry for a stored exe path; the default-browser entry if it's empty or no longer installed.</summary>
+    public static int IndexOf(IReadOnlyList<BrowserChoice> list, string? exePath)
+    {
+        if (string.IsNullOrEmpty(exePath)) return 0;
+        var i = list.ToList().FindIndex(c => string.Equals(c.Browser?.ExePath, exePath, StringComparison.OrdinalIgnoreCase));
+        return i < 0 ? 0 : i;
+    }
 }
 
 /// <summary>

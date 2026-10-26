@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using SaveLinkUtility.Services;
+using SaveLink.Services;
 
-namespace SaveLinkUtility;
+namespace SaveLink;
 
 /// <summary>
 /// The whole UI, built in code (no designer file, no XAML). Layout is plain absolute positioning
@@ -13,7 +13,8 @@ public sealed class MainForm : Form
 {
     private const int ContentWidth = 448;
     private const int ShortcutTab = 0;
-    private const int HelpTab = 1;
+    private const int SettingsTab = 1;
+    private const int HelpTab = 2;
     private const int PreviewIconSize = 48;
 
     private readonly FaviconService _favicons = new();
@@ -23,6 +24,8 @@ public sealed class MainForm : Form
     private readonly TabStrip _tabs = new();
     private readonly TableLayoutPanel _shortcutPage = new();
     private readonly HelpPage _helpPage = new();
+    private readonly AppSettings _settings = AppSettings.Load();
+    private SettingsPage _settingsPage = null!; // built in BuildUi, once the form's font is set
 
     private readonly TextBox _url = new() { PlaceholderText = "Paste a link, or drag one onto this window" };
     private readonly TextBox _name = new() { PlaceholderText = "Name shown under the shortcut" };
@@ -58,15 +61,9 @@ public sealed class MainForm : Form
     private bool _nameEditedByUser;
     private bool _settingName;
 
-    /// <summary>An entry in the "Open with" list. <see cref="Browser"/> is null for "Default browser".</summary>
-    private sealed record BrowserChoice(BrowserInfo? Browser, string Text)
-    {
-        public override string ToString() => Text;
-    }
-
     public MainForm()
     {
-        Text = "SaveLinkUtility";
+        Text = "SaveLink";
         // No automatic scaling: BuildUi sizes everything from the font and DPI via auto-sizing panels.
         AutoScaleMode = AutoScaleMode.None;
         AutoSize = true;
@@ -119,9 +116,14 @@ public sealed class MainForm : Form
             case Keys.Escape when _tabs.SelectedIndex == HelpTab:
                 _tabs.SelectedIndex = ShortcutTab;
                 return true;
+            case Keys.Escape when _tabs.SelectedIndex == SettingsTab:
+                _tabs.SelectedIndex = ShortcutTab;
+                return true;
             case Keys.Control | Keys.Tab:
-            case Keys.Control | Keys.Shift | Keys.Tab:
                 _tabs.SelectedIndex = (_tabs.SelectedIndex + 1) % _tabs.Count;
+                return true;
+            case Keys.Control | Keys.Shift | Keys.Tab:
+                _tabs.SelectedIndex = (_tabs.SelectedIndex + _tabs.Count - 1) % _tabs.Count;
                 return true;
         }
         return base.ProcessCmdKey(ref msg, keyData);
@@ -138,7 +140,7 @@ public sealed class MainForm : Form
         int pad = Dp(16);
 
         // Outer frame: tab bar on top, then whichever page is selected. Hidden pages don't count
-        // towards the auto size, and the Help page is given the shortcut page's size when shown.
+        // towards the auto size, and the other pages are given the shortcut page's size when shown.
         var frame = new TableLayoutPanel
         {
             AutoSize = true,
@@ -151,7 +153,9 @@ public sealed class MainForm : Form
         _tabs.Dock = DockStyle.Fill;
         _tabs.Margin = Padding.Empty;
         _tabs.AddTab("Shortcut");
+        _tabs.AddTab("Settings");
         _tabs.AddTab("Help", "F1");
+        _settingsPage = new SettingsPage(_settings, Font, ContentWidth) { Margin = Padding.Empty, Visible = false };
         _helpPage.Margin = Padding.Empty;
         _helpPage.Visible = false;
         frame.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -159,8 +163,11 @@ public sealed class MainForm : Form
         frame.Controls.Add(_tabs, 0, 0);
         var pages = new Panel { AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Margin = Padding.Empty };
         pages.Controls.Add(_shortcutPage);
+        pages.Controls.Add(_settingsPage);
         pages.Controls.Add(_helpPage);
         frame.Controls.Add(pages, 0, 1);
+        frame.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        frame.Controls.Add(BuildFooter(pad), 0, 2);
 
         var root = _shortcutPage;
         root.AutoSize = true;
@@ -262,25 +269,39 @@ public sealed class MainForm : Form
         Controls.Add(frame);
     }
 
+    /// <summary>The bar along the bottom of every tab: version and build on the left, copyright on the right.</summary>
+    private Control BuildFooter(int pad)
+    {
+        var footer = new Panel { Height = Dp(26), Dock = DockStyle.Fill, Margin = Padding.Empty };
+        var copyright = "© 2026 Per Hejndorf · MIT License";
+        footer.Paint += (_, e) =>
+        {
+            using (var line = new Pen(Color.FromArgb(218, 218, 218)))
+                e.Graphics.DrawLine(line, 0, 0, footer.Width, 0);
+            var area = new Rectangle(pad, 1, footer.Width - 2 * pad, footer.Height - 1);
+            var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding | TextFormatFlags.SingleLine;
+            TextRenderer.DrawText(e.Graphics, BuildInfo.Display, Font, area, SystemColors.GrayText, flags | TextFormatFlags.Left);
+            TextRenderer.DrawText(e.Graphics, copyright, Font, area, SystemColors.GrayText, flags | TextFormatFlags.Right);
+        };
+        _tips.SetToolTip(footer, "Version · build time · commit");
+        return footer;
+    }
+
     private Label BoldLabel(string text) =>
         new() { Text = text, AutoSize = true, Font = new Font(Font, FontStyle.Bold) };
 
     private void ShowTab(int index)
     {
-        if (index == HelpTab)
-        {
-            // Same size as the shortcut page, so the window doesn't jump when switching tabs.
-            _helpPage.Size = _shortcutPage.Size;
-            _helpPage.Visible = true;
-            _shortcutPage.Visible = false;
-            _helpPage.Activate();
-        }
-        else
-        {
-            _shortcutPage.Visible = true;
-            _helpPage.Visible = false;
-            _url.Focus();
-        }
+        Control[] pages = { _shortcutPage, _settingsPage, _helpPage };
+
+        // Same size as the shortcut page, so the window doesn't jump when switching tabs.
+        if (index != ShortcutTab) pages[index].Size = _shortcutPage.Size;
+        pages[index].Visible = true;
+        for (int i = 0; i < pages.Length; i++)
+            if (i != index) pages[i].Visible = false;
+
+        if (index == HelpTab) _helpPage.Activate();
+        else if (index == ShortcutTab) _url.Focus();
     }
 
     // ------------------------------------------------------------------ startup
@@ -290,9 +311,8 @@ public sealed class MainForm : Form
         LoadBrowsers();
         ShowSaveFolder();
 
-        // A URL passed on the command line wins, otherwise use the clipboard if it holds a link.
-        var arg = Environment.GetCommandLineArgs().Skip(1).FirstOrDefault();
-        var initial = arg ?? ReadClipboardText();
+        // Start with the clipboard's link, if it holds one.
+        var initial = ReadClipboardText();
         if (initial != null && UrlHelper.TryNormalize(initial, out var uri))
         {
             _url.Text = uri.AbsoluteUri;
@@ -313,11 +333,20 @@ public sealed class MainForm : Form
         var installed = BrowserService.FindInstalled();
         _defaultBrowser = BrowserService.FindDefault(installed);
 
-        _browserBox.Items.Add(new BrowserChoice(null,
-            _defaultBrowser is null ? "Default browser" : $"Default browser ({_defaultBrowser.Name})"));
-        foreach (var b in installed)
-            _browserBox.Items.Add(new BrowserChoice(b, b.Name));
-        _browserBox.SelectedIndex = 0;
+        var choices = BrowserChoice.List(_defaultBrowser, installed);
+        foreach (var c in choices) _browserBox.Items.Add(c);
+        _settingsPage.SetBrowsers(choices, _defaultBrowser);
+        _settingsPage.SettingsChanged += (_, _) => ApplyBrowserSettings();
+        ApplyBrowserSettings();
+    }
+
+    /// <summary>Selects the browser and app-window choice from Settings on the Shortcut tab.</summary>
+    private void ApplyBrowserSettings()
+    {
+        var choices = _browserBox.Items.Cast<BrowserChoice>().ToList();
+        _browserBox.SelectedIndex = BrowserChoice.IndexOf(choices, _settings.BrowserExe);
+        _appWindow.Checked = _settings.AppWindow; // UpdateUi clears it again if the browser can't do it
+        UpdateUi();
     }
 
     private static string? ReadClipboardText()
@@ -496,7 +525,7 @@ public sealed class MainForm : Form
         if (img == null)
         {
             MessageBox.Show(this, "That file couldn't be read as an image (SVG isn't supported).",
-                "SaveLinkUtility", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                "SaveLink", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
@@ -561,7 +590,7 @@ public sealed class MainForm : Form
         catch (Exception ex)
         {
             MessageBox.Show(this, "Couldn't save the icon:\n\n" + ex.Message,
-                "SaveLinkUtility", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                "SaveLink", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -636,7 +665,7 @@ public sealed class MainForm : Form
         {
             string? iconPath = null;
             if (_saveIcon.Checked)
-                iconPath = IconTools.SaveIco(_icon, ShortcutService.IconDirectory, uri.Host);
+                iconPath = IconTools.SaveIco(_icon, _settings.EffectiveIconFolder, uri.Host);
 
             string? shortcutPath = null;
             if (_createShortcut.Checked)
@@ -659,7 +688,7 @@ public sealed class MainForm : Form
         catch (Exception ex)
         {
             MessageBox.Show(this, "Couldn't create the shortcut:\n\n" + ex.Message,
-                "SaveLinkUtility", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                "SaveLink", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

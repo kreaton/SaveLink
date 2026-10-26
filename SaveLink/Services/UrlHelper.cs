@@ -1,7 +1,7 @@
 using System.Text;
 using System.Windows.Forms;
 
-namespace SaveLinkUtility.Services;
+namespace SaveLink.Services;
 
 public static class UrlHelper
 {

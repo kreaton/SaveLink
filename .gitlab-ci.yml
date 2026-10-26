@@ -1,0 +1,17 @@
+# Builds SaveLink on every push, as a check that it compiles. Nothing is published or uploaded.
+#
+# Runs on GitLab's shared Linux runners: a Windows Forms app can be compiled (not run) on Linux with
+# EnableWindowsTargeting. The pipeline number becomes the patch version (1.0.<n>), see Directory.Build.props.
+# The Store package needs Windows tools (makeappx), so it is built locally with Packaging/Build-Msix.ps1.
+
+build:
+  image: mcr.microsoft.com/dotnet/sdk:10.0
+  variables:
+    DOTNET_NOLOGO: "1"
+    DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+    # Only the latest commit is needed; the SDK puts its id into the version string.
+    GIT_DEPTH: "1"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+  script:
+    - dotnet build SaveLink.sln -c Release -p:EnableWindowsTargeting=true -p:BuildNumber=$CI_PIPELINE_IID

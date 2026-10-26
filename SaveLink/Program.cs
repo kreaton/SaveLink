@@ -1,4 +1,4 @@
-namespace SaveLinkUtility;
+namespace SaveLink;
 
 internal static class Program
 {

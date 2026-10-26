@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace SaveLinkUtility.Services;
+namespace SaveLink.Services;
 
 public static class ShortcutService
 {
@@ -10,9 +10,6 @@ public static class ShortcutService
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     }
-
-    public static string IconDirectory { get; } =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SaveLinkUtility", "Icons");
 
     // ---------------------------------------------------------------- .url (opens in the default browser)
 

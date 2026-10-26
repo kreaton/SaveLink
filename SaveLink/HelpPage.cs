@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SaveLinkUtility;
+namespace SaveLink;
 
 /// <summary>
 /// The Help tab: Help.md (embedded in the exe) converted to RTF and shown in a borderless, read-only
@@ -49,12 +49,11 @@ public sealed class HelpPage : Panel
 
     private static string BuildRtf()
     {
-        using var stream = typeof(HelpPage).Assembly.GetManifestResourceStream("SaveLinkUtility.Help.md");
+        using var stream = typeof(HelpPage).Assembly.GetManifestResourceStream("SaveLink.Help.md");
         var markdown = stream == null ? "# Help\n\nThe help text is missing from this build." : new StreamReader(stream).ReadToEnd();
 
         var r = new RtfWriter();
         MarkdownToRtf(markdown, r);
-        r.Footer($"Version {Application.ProductVersion.Split('+')[0]}");
         return r.ToString();
     }
 
@@ -116,7 +115,6 @@ public sealed class HelpPage : Panel
         public void Lead(string text) => Para(Inline(text), size: 20, color: 3, after: 80);
         public void Heading(string text) => Para(Inline(text), size: 23, color: 2, font: 1, before: 220, after: 60);
         public void Text(string text) => Para(Inline(text), size: 19, color: 1, after: 80);
-        public void Footer(string text) => Para(Inline(text), size: 17, color: 3, before: 280, after: 240);
 
         public void Step(int n, string text) =>
             Para($@"{n}.\tab {Inline(text)}", size: 19, color: 1, after: 60, indent: 340, firstLine: -340);

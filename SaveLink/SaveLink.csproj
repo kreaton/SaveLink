@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>SaveLink</AssemblyName>
+    <RootNamespace>SaveLink</RootNamespace>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+
+    <!-- The version is set in Directory.Build.props. -->
+    <Product>SaveLink</Product>
+    <Authors>Per Hejndorf</Authors>
+    <Copyright>Copyright © 2026 Per Hejndorf</Copyright>
+    <!-- The UI is English only; leave out WinForms' translated resource folders. -->
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Help.md" LogicalName="SaveLink.Help.md" />
+  </ItemGroup>
+
+</Project>

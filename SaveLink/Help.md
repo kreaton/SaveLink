@@ -1,4 +1,4 @@
-# SaveLinkUtility
+# SaveLink
 
 Turns a web address into a desktop shortcut that carries the site's own icon.
 
@@ -29,20 +29,31 @@ The links under the preview change it:
 ## Saving
 
 - **Save location** is the Desktop by default. Use **Browse…** to pick another folder.
-- **Save icon locally** stores the icon in `%LOCALAPPDATA%\SaveLinkUtility\Icons`.
+- **Save icon locally** stores the icon in the icon folder, which is `Documents\SaveLink\Icons` unless you change it under **Settings**.
   The shortcut points at that file, so keep the folder.
 - **Create shortcut** can be unticked to only save the icon.
 
 After creating, **Show in folder** reveals the new file in Explorer.
 
-## Keyboard and command line
+## Settings
 
-- `F1` opens this page, `Esc` goes back, `Ctrl+Tab` switches tabs.
-- `SaveLinkUtility.exe https://example.com` starts with that address filled in.
+Settings are saved as soon as you change them.
+
+- **Browser** is chosen on the Shortcut tab when the program starts, together with **Open in its own app window**.
+  You can still pick something else there for a single shortcut.
+- **Icon folder** is where saved icons go. **Open folder** shows it in Explorer, **Use default** goes back to `Documents\SaveLink\Icons`.
+  Changing the folder doesn't move icons you already have, and existing shortcuts keep pointing at the old files.
+
+## Keyboard
+
+- `F1` opens this page, `Esc` goes back to the Shortcut tab.
+- `Ctrl+Tab` and `Ctrl+Shift+Tab` switch between tabs.
 
 ## Start it with a hotkey
 
 Because a copied link is filled in automatically, a hotkey makes this quick: copy a link, press the keys, click **Create Shortcut**.
 
-- **Windows' own shortcut key:** right-click a shortcut to SaveLinkUtility on the Desktop or in the Start Menu, choose **Properties**, click in **Shortcut key** and press a key. Windows makes it `Ctrl+Alt` plus that key. It can take a moment to react.
-- **PowerToys:** in **Keyboard Manager**, choose **Remap a shortcut**, add a shortcut such as `Win+Shift+L`, and set the action to **Run program** with the path to `SaveLinkUtility.exe`. This reacts instantly and allows any key combination.
+- **Windows' own shortcut key:** you need a shortcut to SaveLink on the Desktop. To make one, drag SaveLink from the Start menu's **All** list onto the Desktop.
+  Right-click it, choose **Properties**, click in **Shortcut key** and press a key. Windows makes it `Ctrl+Alt` plus that key. It can take a moment to react.
+- **PowerToys:** in **Keyboard Manager**, choose **Remap a shortcut**, add a shortcut such as `Win+Shift+L`, and set the action to **Run program** with `SaveLink.exe` as the program.
+  This reacts instantly and allows any key combination.
