@@ -39,3 +39,10 @@ After creating, **Show in folder** reveals the new file in Explorer.
 
 - `F1` opens this page, `Esc` goes back, `Ctrl+Tab` switches tabs.
 - `SaveLinkUtility.exe https://example.com` starts with that address filled in.
+
+## Start it with a hotkey
+
+Because a copied link is filled in automatically, a hotkey makes this quick: copy a link, press the keys, click **Create Shortcut**.
+
+- **Windows' own shortcut key:** right-click a shortcut to SaveLinkUtility on the Desktop or in the Start Menu, choose **Properties**, click in **Shortcut key** and press a key. Windows makes it `Ctrl+Alt` plus that key. It can take a moment to react.
+- **PowerToys:** in **Keyboard Manager**, choose **Remap a shortcut**, add a shortcut such as `Win+Shift+L`, and set the action to **Run program** with the path to `SaveLinkUtility.exe`. This reacts instantly and allows any key combination.
