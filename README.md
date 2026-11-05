@@ -4,13 +4,13 @@
 [![Release build](https://github.com/kreaton/SaveLink/actions/workflows/release.yml/badge.svg)](https://github.com/kreaton/SaveLink/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+![SaveLink: any web address as a desktop shortcut with the site's own icon](docs/images/banner.png)
+
 **Turn any web address into a desktop shortcut that carries the site's own icon.**
 
 Paste or drag a link into SaveLink. It finds the page's title and best icon, and makes a shortcut on your Desktop. Your favourite sites then sit on the Desktop looking like apps, instead of a row of identical browser icons.
 
 **[⬇ Download SaveLink for Windows](https://github.com/kreaton/SaveLink/releases/latest/download/SaveLink-win-Setup.exe)** (Windows 10 or 11, 64-bit)
-
-![SaveLink with github.com filled in and GitHub's icon found](docs/images/shortcut.png)
 
 ## What it does
 
@@ -35,6 +35,8 @@ Paste or drag a link into SaveLink. It finds the page's title and best icon, and
 1. Copy a link, or drag one onto the window.
 2. Check the name and icon.
 3. Click **Create Shortcut**.
+
+![SaveLink with a web address filled in and the site's icon found](docs/images/shortcut.png)
 
 Press **F1** in the app for help with every option.
 
