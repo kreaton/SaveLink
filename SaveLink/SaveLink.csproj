@@ -22,4 +22,9 @@
     <EmbeddedResource Include="Help.md" LogicalName="SaveLink.Help.md" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Keep this version in step with vpk in .github/workflows/release.yml. -->
+    <PackageReference Include="Velopack" Version="1.2.161" />
+  </ItemGroup>
+
 </Project>

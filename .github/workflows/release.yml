@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    # Only changes to the app make a new release. SaveLink/Help.md is embedded in the app, so it's not listed.
+    paths-ignore:
+      - 'Promo/**'
+      - 'docs/**'
+      - 'Packaging/**'
+      - 'README.md'
+      - 'PRIVACY.md'
+      - 'LICENSE'
+      - '.gitlab-ci.yml'
+  workflow_dispatch:
+
+# The version is derived from the latest release, so two runs must never overlap.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write # create the GitHub release and upload its assets
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # vpk is a .NET tool, and it also builds the app
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      # Keep this version in step with the Velopack package in SaveLink.csproj.
+      - name: Install vpk
+        run: dotnet tool install -g vpk --version 1.2.161
+
+      - name: Build, pack and publish
+        shell: pwsh
+        run: ./SaveLink/BuildRelease.ps1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

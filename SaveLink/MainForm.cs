@@ -46,6 +46,8 @@ public sealed class MainForm : Form
     private readonly Button _create = new() { Text = "Create Shortcut" };
     private readonly Label _status = new() { TextAlign = ContentAlignment.MiddleCenter };
     private readonly LinkLabel _show = new() { Text = "Show in folder", AutoSize = true, Visible = false };
+    private readonly LinkLabel _update = new() { AutoSize = true, Visible = false };
+    private readonly UpdateService _updates = new();
 
     private CancellationTokenSource? _lookupCts;
     private Bitmap? _icon;
@@ -281,9 +283,17 @@ public sealed class MainForm : Form
             var area = new Rectangle(pad, 1, footer.Width - 2 * pad, footer.Height - 1);
             var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding | TextFormatFlags.SingleLine;
             TextRenderer.DrawText(e.Graphics, BuildInfo.Display, Font, area, SystemColors.GrayText, flags | TextFormatFlags.Left);
-            TextRenderer.DrawText(e.Graphics, copyright, Font, area, SystemColors.GrayText, flags | TextFormatFlags.Right);
+            if (!_update.Visible) // there's no room for both
+                TextRenderer.DrawText(e.Graphics, copyright, Font, area, SystemColors.GrayText, flags | TextFormatFlags.Right);
         };
         _tips.SetToolTip(footer, "Version · build time · commit");
+
+        // Just right of the version text; only shown once a newer release has been found.
+        _update.Location = new Point(pad + TextRenderer.MeasureText(BuildInfo.Display, Font).Width + Dp(12),
+            (footer.Height - _update.PreferredHeight) / 2);
+        _update.LinkClicked += OnUpdateClicked;
+        _update.VisibleChanged += (_, _) => footer.Invalidate();
+        footer.Controls.Add(_update);
         return footer;
     }
 
@@ -326,6 +336,33 @@ public sealed class MainForm : Form
 
         _url.Focus();
         _url.SelectionStart = _url.TextLength;
+
+        _ = ShowUpdateIfAvailableAsync();
+    }
+
+    private async Task ShowUpdateIfAvailableAsync()
+    {
+        var version = await _updates.CheckAsync();
+        if (version == null) return;
+        _update.Text = $"Update to v{version}";
+        _update.Visible = true;
+    }
+
+    private async void OnUpdateClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+    {
+        var offer = _update.Text;
+        _update.Enabled = false;
+        _update.Text = "Downloading update…";
+        try
+        {
+            await _updates.InstallAndRestartAsync();
+        }
+        catch (Exception ex)
+        {
+            _update.Text = offer;
+            _update.Enabled = true;
+            MessageBox.Show(this, $"The update failed: {ex.Message}", "SaveLink", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void LoadBrowsers()

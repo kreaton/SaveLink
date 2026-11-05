@@ -1,8 +1,8 @@
 <Project>
 
   <!--
-    Version: Major.Minor is set here by hand; the patch is the GitLab pipeline number
-    (passed as /p:BuildNumber=$CI_PIPELINE_IID) and stays 0 for local builds. The SDK appends the
+    Version: Major.Minor is set here by hand; the patch is worked out by SaveLink/BuildRelease.ps1
+    (passed as -p:BuildNumber=...) and stays 0 for local builds. The SDK appends the
     git commit to InformationalVersion (1.0.42+<sha>), and the build time is stamped below.
     The app reads all of it through BuildInfo; the Store package uses Major.Minor.BuildNumber.0.
   -->

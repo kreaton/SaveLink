@@ -4,8 +4,8 @@
 #   .\Packaging\Build-Msix.ps1 -Install         also install the x64 build locally to try it out
 #                                               (needs Developer Mode: Settings > System > For developers)
 #
-# The version is Major.Minor from Directory.Build.props plus -BuildNumber (use the latest GitLab pipeline
-# number, so it matches what CI built). The Store needs a 4th part of 0, added here, and every upload
+# The version is Major.Minor from Directory.Build.props plus -BuildNumber (use the patch number of the latest
+# GitHub release, so it matches what CI built). The Store needs a 4th part of 0, added here, and every upload
 # must have a higher version than the last.
 # The package is unsigned: the Store signs it on upload. Needs the .NET 10 SDK and the Windows SDK.
 

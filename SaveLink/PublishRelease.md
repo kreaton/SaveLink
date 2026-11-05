@@ -1,6 +1,6 @@
 # Stand-alone exe (outside the Store)
 
-For the Microsoft Store package, see "Publishing to the Microsoft Store" in the main README. This page is about a single `SaveLink.exe` you can copy to any PC. Run the commands from the solution folder.
+For the installer on GitHub Releases and the Microsoft Store package, see [`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md). This page is about a single `SaveLink.exe` you can copy to any PC. It has no automatic updates. Run the commands from the solution folder.
 
 **Self-contained (recommended):** bundles the .NET runtime, so it runs on any Windows 10/11 x64 PC with nothing installed. The exe is tens of MB.
 

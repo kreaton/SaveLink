@@ -1,6 +1,6 @@
 # SaveLink privacy policy
 
-*Last updated: 26 October 2026*
+*Last updated: 5 November 2026*
 
 SaveLink does not collect, store or send any personal data to its author, and it contains no analytics, tracking or advertising.
 
@@ -11,7 +11,11 @@ To find a page's title and icon, SaveLink downloads:
 - **the web page you enter**, and the icon files that page refers to, directly from that website;
 - **Google's favicon service** (`www.google.com/s2/favicons`), only when the website itself doesn't provide a usable icon. This request tells Google the domain name of the site, as visiting the site in a browser would.
 
-These requests are made only when you enter or drop a link. Nothing else is sent anywhere.
+These requests are made only when you enter or drop a link.
+
+**Updates:** the copy installed with SaveLink's setup from GitHub also asks GitHub (`github.com`) for the latest release each time it starts, and downloads an update from there if you choose to install it. As with any web request, GitHub sees your IP address. The Microsoft Store version doesn't do this, because the Store handles its updates.
+
+Nothing else is sent anywhere.
 
 ## What the app stores on your PC
 
@@ -22,4 +26,4 @@ All of this stays on your PC. Uninstalling SaveLink removes its settings; the sh
 
 ## Contact
 
-Questions about this policy: open an issue at https://gitlab.com/phejndorf/SaveLink/-/issues.
+Questions about this policy: open an issue at https://github.com/kreaton/SaveLink/issues.
