@@ -2,7 +2,7 @@
 
 [![Latest release](https://img.shields.io/github/v/release/kreaton/SaveLink?label=download)](https://github.com/kreaton/SaveLink/releases/latest)
 [![Release build](https://github.com/kreaton/SaveLink/actions/workflows/release.yml/badge.svg)](https://github.com/kreaton/SaveLink/actions/workflows/release.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ![SaveLink: any web address as a desktop shortcut with the site's own icon](docs/images/banner.png)
 
@@ -78,6 +78,8 @@ dotnet run --project SaveLink
 
 Bug reports and ideas are welcome in [Issues](https://github.com/kreaton/SaveLink/issues).
 
-## License
+## License & Authorship
 
-[MIT](LICENSE) © 2026 Per Hejndorf. You may use, change and share SaveLink and its code, also commercially, as long as the copyright notice stays with it.
+This project is distributed under the terms of the [MIT License](LICENSE).
+
+**AI authorship note:** Most of the source code in this repository was generated with AI coding agents (Claude Code), under my direction and review. Purely AI-generated material may not be eligible for copyright protection in some jurisdictions. To the extent any part of this project is protected by copyright, it is licensed under the MIT License, and the license's warranty and liability disclaimers apply to the project as a whole.
