@@ -17,11 +17,11 @@ Used to build, test or render promotional material only; not part of the shipped
 | Library | Version | Licence | Source | Modified |
 |---|---|---|---|---|
 | .NET Desktop Runtime (prerequisite, installed separately; not bundled) | 10.0 | MIT | [dotnet/runtime](https://github.com/dotnet/runtime) | No |
-| @remotion/cli (`Promo/`) | 4.0.300 | Remotion License (free for individuals and companies of up to 3 people) | [npm](https://www.npmjs.com/package/@remotion/cli/v/4.0.300) | No |
-| @remotion/media-utils (`Promo/`) | 4.0.300 | MIT | [npm](https://www.npmjs.com/package/@remotion/media-utils/v/4.0.300) | No |
+| @remotion/cli (`Promo/`) | 4.0.544 | Remotion License (free for individuals and companies of up to 3 people) | [npm](https://www.npmjs.com/package/@remotion/cli/v/4.0.544) | No |
+| @remotion/media-utils (`Promo/`) | 4.0.544 | MIT | [npm](https://www.npmjs.com/package/@remotion/media-utils/v/4.0.544) | No |
 | react (`Promo/`) | 18.3.1 | MIT | [npm](https://www.npmjs.com/package/react/v/18.3.1) | No |
 | react-dom (`Promo/`) | 18.3.1 | MIT | [npm](https://www.npmjs.com/package/react-dom/v/18.3.1) | No |
-| remotion (`Promo/`) | 4.0.300 | Remotion License (free for individuals and companies of up to 3 people) | [npm](https://www.npmjs.com/package/remotion/v/4.0.300) | No |
+| remotion (`Promo/`) | 4.0.544 | Remotion License (free for individuals and companies of up to 3 people) | [npm](https://www.npmjs.com/package/remotion/v/4.0.544) | No |
 | @types/react (`Promo/`) | 18.3.12 | MIT | [npm](https://www.npmjs.com/package/@types/react/v/18.3.12) | No |
 | typescript (`Promo/`) | 5.6.3 | Apache-2.0 | [npm](https://www.npmjs.com/package/typescript/v/5.6.3) | No |
 
