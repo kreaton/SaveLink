@@ -44,7 +44,7 @@ The release is framework-dependent (win-x64). [Velopack](https://velopack.io)'s 
 To build the installer locally without uploading anything:
 
 ```
-dotnet tool install -g vpk --version 1.2.161
+dotnet tool install -g vpk --version 1.3.39-g8d2844f
 .\SaveLink\BuildRelease.ps1 -LocalOnly
 ```
 
