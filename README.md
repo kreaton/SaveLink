@@ -3,7 +3,7 @@
 [![Latest release](https://img.shields.io/github/v/release/kreaton/SaveLink?label=download)](https://github.com/kreaton/SaveLink/releases/latest)
 [![Release build](https://github.com/kreaton/SaveLink/actions/workflows/release.yml/badge.svg)](https://github.com/kreaton/SaveLink/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/kreaton/SaveLink?style=social)](https://github.com/kreaton/SaveLink/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/kreaton/SaveLink?style=flat&logo=github&color=yellow)](https://github.com/kreaton/SaveLink/stargazers)
 
 ⭐ If SaveLink earns a place on your machine, [star it on GitHub](https://github.com/kreaton/SaveLink) — it's free, made by one developer, and stars are how other people find it.
 
