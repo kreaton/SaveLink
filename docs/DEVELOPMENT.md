@@ -52,10 +52,6 @@ The result is in `SaveLink\Releases`. Keep the `vpk` version in `release.yml` th
 
 Installed copies check for a newer release each time they start (`SaveLink/Services/UpdateService.cs`) and offer it at the bottom of the window. This reads public release data with no token, so **the repository must stay public** for updates to work. Store copies and plain exes aren't Velopack installs, so they skip the check.
 
-## Continuous integration on GitLab
-
-The repository is also on [GitLab](https://gitlab.com/phejndorf/SaveLink), where the privacy policy link in the Store listing may point. [`.gitlab-ci.yml`](../.gitlab-ci.yml) builds the solution on every push to check that it compiles. It runs on GitLab's free Linux runners (`EnableWindowsTargeting` lets a Windows Forms app compile there) and publishes nothing.
-
 ## How browsers are found
 
 The **Open with** list holds "Default browser" plus every browser installed on the PC. The browser selected when the app starts comes from Settings. The code is in `SaveLink/Services/BrowserService.cs`.
